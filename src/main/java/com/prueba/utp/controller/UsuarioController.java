@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.prueba.utp.model.Usuario;
+import com.prueba.utp.model.User;
 import com.prueba.utp.repository.UsuarioRepository;
 
 @RestController
@@ -25,27 +25,27 @@ public class UsuarioController {
 	private UsuarioRepository usuarioRepository;
 	
 	@GetMapping
-	public List<Usuario> getAllUsers() {
+	public List<User> getAllUsers() {
 		return usuarioRepository.findAll();
 	}
 	
 	@PostMapping
-	public Usuario createUser(@RequestBody Usuario usuario) {
+	public User createUser(@RequestBody User usuario) {
 		return usuarioRepository.save(usuario);
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Usuario> getUserById(@PathVariable Long id) {
-		Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+	public ResponseEntity<User> getUserById(@PathVariable Long id) {
+		Optional<User> usuarioOptional = usuarioRepository.findById(id);
 		return usuarioOptional.map(usuario -> ResponseEntity.ok().body(usuario)).orElse(ResponseEntity.notFound().build());
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Usuario> updateUser(@PathVariable Long id, @RequestBody Usuario usuarioDetalle) {
-		Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+	public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User usuarioDetalle) {
+		Optional<User> usuarioOptional = usuarioRepository.findById(id);
 		if (usuarioOptional.isPresent()) {
-			Usuario usuario = usuarioOptional.get();
-			usuario.setNombre(usuarioDetalle.getNombre());
+			User usuario = usuarioOptional.get();
+			usuario.setUsername(usuarioDetalle.getUsername());
 			usuario.setEmail(usuarioDetalle.getEmail());
 			usuarioRepository.save(usuario);
 			return ResponseEntity.ok().body(usuario);
@@ -55,10 +55,10 @@ public class UsuarioController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Usuario> deleteUser(@PathVariable Long id) {
-		Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+	public ResponseEntity<User> deleteUser(@PathVariable Long id) {
+		Optional<User> usuarioOptional = usuarioRepository.findById(id);
 		if (usuarioOptional.isPresent()) {
-			Usuario usuario = usuarioOptional.get();			
+			User usuario = usuarioOptional.get();			
 			usuarioRepository.delete(usuario);
 			return ResponseEntity.ok().build();
 		} else {
