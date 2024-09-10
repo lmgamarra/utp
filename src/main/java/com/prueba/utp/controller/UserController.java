@@ -15,40 +15,41 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.prueba.utp.model.User;
-import com.prueba.utp.repository.UsuarioRepository;
+import com.prueba.utp.repository.UserRepository;
 
 @RestController
-@RequestMapping("api/usuario")
-public class UsuarioController {
+@RequestMapping("api/user")
+public class UserController {
 	
 	@Autowired
-	private UsuarioRepository usuarioRepository;
+	private UserRepository userRepository;
 	
 	@GetMapping
 	public List<User> getAllUsers() {
-		return usuarioRepository.findAll();
+		return userRepository.findAll();
 	}
 	
 	@PostMapping
-	public User createUser(@RequestBody User usuario) {
-		return usuarioRepository.save(usuario);
+	public User createUser(@RequestBody User user) {
+		return userRepository.save(user);
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<User> getUserById(@PathVariable Long id) {
-		Optional<User> usuarioOptional = usuarioRepository.findById(id);
-		return usuarioOptional.map(usuario -> ResponseEntity.ok().body(usuario)).orElse(ResponseEntity.notFound().build());
+		Optional<User> userOptional = userRepository.findById(id);
+		return userOptional.map(user -> ResponseEntity.ok().body(user)).orElse(ResponseEntity.notFound().build());
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User usuarioDetalle) {
-		Optional<User> usuarioOptional = usuarioRepository.findById(id);
-		if (usuarioOptional.isPresent()) {
-			User usuario = usuarioOptional.get();
-			usuario.setUsername(usuarioDetalle.getUsername());
-			usuario.setEmail(usuarioDetalle.getEmail());
-			usuarioRepository.save(usuario);
-			return ResponseEntity.ok().body(usuario);
+	public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
+		Optional<User> userOptional = userRepository.findById(id);
+		if (userOptional.isPresent()) {
+			User user = userOptional.get();
+			user.setUsername(userDetails.getUsername());
+			user.setPassword(userDetails.getPassword());
+			user.setEmail(userDetails.getEmail());
+			userRepository.save(user);
+			return ResponseEntity.ok().body(user);
 		} else {
 			return ResponseEntity.notFound().build();
 		}		
@@ -56,10 +57,10 @@ public class UsuarioController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<User> deleteUser(@PathVariable Long id) {
-		Optional<User> usuarioOptional = usuarioRepository.findById(id);
-		if (usuarioOptional.isPresent()) {
-			User usuario = usuarioOptional.get();			
-			usuarioRepository.delete(usuario);
+		Optional<User> userOptional = userRepository.findById(id);
+		if (userOptional.isPresent()) {
+			User user = userOptional.get();			
+			userRepository.delete(user);
 			return ResponseEntity.ok().build();
 		} else {
 			return ResponseEntity.notFound().build();
